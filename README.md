@@ -15,6 +15,7 @@ Local Aliases:
 # Key Concept Reviews 
 
 ***Destructuring Notes***
+
 [FreeCodeCamp](https://www.youtube.com/watch?v=-vR3a11Wzt0&t=43s): 6:30
 
 Extract data from arrays or objects into distinct variables. 
@@ -74,6 +75,7 @@ const profileUpdate = ({ name, age, nationality, location }) => {
 
 
 ***Scope Review*** 
+
 [Source](https://medium.com/@MentallyFriendly/es6-an-idiots-guide-to-let-and-const-70be9691c389)
 
 - I had the mental question, what happens when I declare a let? Is it a variable or a constant? It's a "block-level scoped variable."
@@ -116,7 +118,7 @@ console.log(two);
 
 
 ***Debouncing***
-- [Video 1](https://www.youtube.com/watch?v=QvJx9nXWmKc) && [Medium](https://medium.com/@akwebengineer/there-are-times-when-we-need-do-expensive-things-on-the-browser-such-as-handling-scroll-events-key-1a2a46404f5e)
+- [Video 1](https://www.youtube.com/watch?v=QvJx9nXWmKc)
     - events get triggered for every user interaction. Like say that you want to fire an event after a small timeout
     ```
     function emulateUserEvent(){
@@ -129,10 +131,40 @@ console.log(two);
     "this runs 20 times"
     - Debouncing takes in a function call back and a wait time and returns another function, a closure.
     - Debouncing is supposed to wait for a certain time after a user has stopped interacting when it calls the event handler function.
+- [Medium](https://medium.com/@akwebengineer/there-are-times-when-we-need-do-expensive-things-on-the-browser-such-as-handling-scroll-events-key-1a2a46404f5e)
+    - AJAX requests may come back in random order irrelevant to what the user has typed due to its asynchronous nature. Debouncing is a middleman between event triggers and their corresponding event hanlers. A helper function takes in the intended event handler and returns a closure function useful for the event handler
+    - Throttling is useful for parallax scrolling where the page will update a certain time intervals
+
+
+***Prototypes and Constructor Functions***
+
+- [JS Prototypes Video 1 - Coding Train](https://www.youtube.com/watch?v=hS_WqkyUah8)
+
+- Check out risingstack_2 / sketch.js. 1 particle on a canvas that is created would have both a `Particle.x` and a `Particle.y` property but also have a `Particle.prototype` property that gets directed through `show()` function. 
+- This can subsequently be chained. The `proto` attribute goes to `Object.prototype` (`hasOwnProperty`). 
+
+- subsqeuently topics of ***"polymorphism"*** and ***"inheritance"***
+
+- [JS Prototypes Video 2 - Techsith](https://www.youtube.com/watch?v=7oNWNlMrkpc)
+
+- While Java has class based inheritance, JavaScript has no class inheritance, it has *prototype inheritance.*
+- Using constructors, you can create objects. Every function expression 
+- Prototype cuts down on redundancy otherwise, every single new recreation (new "particle") would require recreation of the original function, which gets redundant.
+- do 
+    - `var x = function(j) { this.i = 0; this.j = j; };` assigning X and J values after input to X
+    - `x.prototype.getJ = function() { return this.j; };` creating a new prototype from X to return J values
+    - At the top, There is a "Master Object" which has its prototype properties & prototype methods.
+    - Beneath, there is a function with has its prototype properties & prototype methods.
+    - At the bottom there is the X object  with its prototype properties & prototype methods.
     
+- other things include creating subclasses and sub Constructors, overriding prototype chain attributes, and adding prototypes to the master object
+
+    - 1. use a function to reate an object with associated properties (especially with the `this` keyword, example: `this.x = 100; this.y = 99;` )
+    - 2. `var p = new Particle();` could call that again. `new` keyword means eectue that function as a constructor function and bind it to the keyword `this`.
+    - 3. it has a `proto` property too. 
 
 
-# Lesson 1 - Common.js Modules
+# Rithm Lesson 1 - Common.js Modules
 https://www.rithmschool.com/courses/node-express-fundamentals/introduction-to-node-js
 
 **terminal p1**
@@ -248,7 +280,7 @@ var models = require("./models");
     - 4. JSON files can be imported and come in as a javascript object through the require
   
 
-# Lesson 2 - Core Node.js Modules
+# Rithm Lesson 2 - Core Node.js Modules
 
 - Be able to compare node finds built-in modules vs custom modules
 - Be able to import and use core modules like `fs`, `path`, and `process`
@@ -368,7 +400,7 @@ Review of terminal basics:
 ***the process module***
 - accepts command line arguments (`argv`), listening for specific events (`on`)
 - `process.env` accesses environment variables.
-- `porcess` is a reserved keyword.
+- `process` is a reserved keyword.
 
 ***HTTP Module***
 - use this module on its own to create server. It is one of the essential parts of express.js. Express' role as a framework is to abstract challenging and tedious parts of routing
@@ -391,7 +423,7 @@ server.listen(3000, function() {
 ```
 
 
-# Lesson 3 - NPM
+# Rithm Lesson 3 - NPM
 
 - explain how package.json works
 - be able to install packages
@@ -399,8 +431,360 @@ server.listen(3000, function() {
 
 ***initializing***
 
+*See Lesson 3 folder*
+
 - use npm
 - `npm init` - creation process
-- create a `package.json` do `npm init -y`. Prompts serve as a purpose if you want to make your own package and to generate a package.json for dependency and script listing.
+- create a `package.json` do `npm init --y`. Prompts serve as a purpose if you want to make your own package and to generate a package.json for dependency and script listing.
 - `npm install express`. The --save flag occurs by default
 - install "external module" called `request` useful for making server side request to other APIs.
+
+- 1. Create a directory for your `external_modules`
+- 2. `npm init --y` from there : creates a package.json
+- 3. `npm install request` : creates the node_modules folder
+- 4. Create a `main.js`
+- 5. add to `main.js` the following: 
+
+```
+const request = require("request");
+
+request("http://swapi.co/api/people/1", function(error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(JSON.parse(body)); // Show the JSON for the Star Wars Character
+  }
+});
+
+```
+
+- a `.gitignore` is used for telling Github which dependencies to avoid when to commit. to do this you: 
+    - 1. add text `node_modules` to the `.gitignore`
+    - 2. terminal version: `echo node_modules > .gitignore`.
+
+
+# Exercise 1 - Intro Exercises
+
+- 1. Prep (see exercise_1)
+    - 1. Use these modules to make a request to an API and store the data in a text file
+        - 1. fs - for reading and writing to a file
+        - 2. process - for gathering arguments from the command line
+        - 3. request - for making API requests (this is an external module)
+    - 2. Accept command line argument from process.argv
+    - 3. make a request to the dad joke API
+    - 4. it should output a random joke if it finds one matching the term and should save the joke in `jokes.txt`
+    - 5. Furthermore, use the `prompt` module to ask the user for input && your program should accept a command line argument called `leaderboard`
+- 2. So there wasn't an answer to this
+    - 1. I need help with the following:
+        - 1. Appending to a txt file
+        - 2. the process.argv
+        
+    - 2. My process
+        - 1. Mkdir external_modules. npm init --y. add a main.js. node install request. add a jokes.txt
+        - 2. main.js created constants for fs and request.
+        - 3. I would've made a function for accepting the search argument before the request.
+    
+
+# Rithm Lesson 4 - Express.js
+
+- Express is for building server side applications with ease
+
+*See `lesson_4`.*
+
+1. Create an `app.js` file before `npm init --y`
+2. `npm install express`
+3. add to the `app.js`
+```
+// require the express module
+const express = require("express");
+// create an object from the express function which we contains methods for making requests and starting the server
+const app = express();
+
+// create a route for a GET request to '/' - when that route is reached, run a function
+app.get("/", function(request, response) {
+  /* inside of this callback we have two large objects, request and response
+        request - can contain data about the request (query string, url parameters, form data)
+        response - contains useful methods for determining how to respond (with html, text, json, etc.)
+    let's respond by sending the text Hello World!
+    */
+  return response.send("Hello World!");
+});
+
+// let's tell our server to listen on port 3000 and when the server starts, run a callback function that console.log's a message
+app.listen(3000, function() {
+  console.log(
+    "The server has started on port 3000. Head to localhost:3000 in the browser and see what's there!"
+  );
+});
+```
+4. start the server with `node app.js`. Go to `localhost:3000`. Stop the server with `cntrl + c`
+
+
+***Nodemon***
+https://nodemon.io/
+
+- useful for restarting the server automatically when files are edited or if a server crashes.
+- install it globally. `npm install -g nodemon`
+- from now on you can `nodemon app.js` instead of `node app.js`
+
+
+- Go from building static routes to dynamic routing. URL params exist in the request object 
+- issue different responses on localhost:3000, like `localhost:3000/chicken/mitchell` -- you'll see a CANNOT GET
+- Remember, **all URL parameters are strings**
+
+- example of request.params for an inputted username inside of an `app.js`
+
+```
+const express = require('express');
+const app = express();
+
+app.get('/', function(request, response) {
+  return response.send('Hello World!');
+});
+
+app.get('/user/:name', function(request, response) {
+  return response.send(`Hello ${request.params.name}`);
+});
+
+app.listen(3000, function() {
+  console.log('Server is listening on port 3000');
+});
+```
+
+# Rithm Lesson 5 - serving JSON with Express.js
+
+- use the `.json()` method on a respone object to respond with JSON. These parameters are called `request` and `response` (`req` and `res`). like in this:
+```
+app.get("/", (req, res) => {
+  res.json({ message: "That's it!" });
+});
+
+// or
+
+app.get("/instructor", (req, res) => {
+  res.json({ name: "Rupert" });
+});
+
+```
+"I'ma keep it real with you chief, not sure what the "/" stands for."
+
+- `.send()` vs `.json()`. These are two methods you use to send JSON from an express app back. 
+- `.json` converts on objects (including null and undefined) to JSON and .`json` formats the response using settings defined in the application. 
+
+"yeah ok but why tho"
+
+- include a `body-parser` module which "parses" the "body" of the response. This is considered a "middleware" module, sitting between the request and response cycle which can modify either the request or response.
+- because it's considered external middleware, you need a process to se it: 
+    - 1. `npm install body-parser`
+    - 2. `const bodyParser = require("body-parser")`
+    - 3. use it `app.use(bodyParser())` notice the bodyParser variable
+    - 4. data is sent to server collected insde of `req.body` the body definer of the request
+    - 5. add an accompanying HTTP status code with the `.status` method and chain `.json`
+```
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded 
+
+app.get("/", (req, res) => {
+  res.status(200).json({ name: "Elie" });
+});
+
+app.get("/secret", (req, res) => {
+  res.status(401).json({ message: "Unauthorized" });
+});
+```
+"v confused but I understand the underlying pretext"
+
+
+
+
+
+# Rising Stack Lesson 1 
+
+Node.js is an open-source framework
+Node.js is a cross-platform runtime environment for developing server-side and networking applications
+Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine
+Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient.
+Node.js utilizes libuv, a multi-platform support library with a focus on asynchronous I/O.
+
+Node.js uses [libuv](https://github.com/libuv/libuv), a support library for asynchronous I/O. Libuv is this github repo handling threading, file system events, implenting the event loop, and thread pools
+
+1. It's good practice to add a `start` script to the `package.json` after `npm init`. Helps with Platform as a Service?
+2. keep your `index.js` file pretty lightweight
+
+3. here's a starting point for the `.gitignore`
+```
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Directory for instrumented libs generated by jscoverage/JSCover
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules
+jspm_packages
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+```
+
+- Node uses a version number MAJOR.MINOR.PATCH, increment the MAJOR version when you make incompatible API changes, MINOR version when you add functionality in a backwards-compatible manner, and PATCH version when you make backwards-compatible bug fixes.
+
+4. minify JS files, concatenate CSS files, modules will only be run during the development, and running application doesn't need them. For example `npm install mocha --save-dev`
+
+5. NPM scripts. The most commone ones are `start` and `test` scripts. Start defines how the application starts, test is for running tests. 
+```
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha test",
+    "your-custom-script": "echo npm"
+  }
+```
+"Start can be invoked with `npm start`, test uses mocha but it doesn't need to be installed globally and invoke it with `npm test`. Custom scripts can also be invoked"
+
+Scoped packages - `@myorg/mypackage`
+
+
+# Rising Stack Lesson 2 - HTTP module
+
+- 1. require the http module in the `index.js`
+- 2. bind the server to port 3000
+```
+// content of index.js
+const http = require('http')
+const port = 3000
+
+const requestHandler = (request, response) => {
+  console.log(request.url)
+  response.end('Hello Node.js Server!')
+}
+
+const server = http.createServer(requestHandler)
+
+server.listen(port, (err) => {
+  if (err) {
+    return console.log('something bad happened', err)
+  }
+
+  console.log(`server is listening on ${port}`)
+})
+```
+"`requestHandler` - function invoked everytime a request hits the server."
+
+This is used to be how you had to do things, and then Express came along.
+
+- 3. `npm install express --save`. The above becomes
+```
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (request, response) => {
+  response.send('Hello from Express!')
+})
+
+app.listen(port, (err) => {
+  if (err) {
+    return console.log('something bad happened', err)
+  }
+
+  console.log(`server is listening on ${port}`)
+})
+```
+- express, by default, gives you a router. You define the application's routing with `app.get`, `app.post`, `app.put`.
+- "Middlewares" are "Unix Pipelines" but for HTTP requests.
+
+```
+const express = require('express')
+const app = express()
+
+app.use((request, response, next) => {
+  console.log(request.headers)
+  next()
+})
+
+app.use((request, response, next) => {
+  request.chance = Math.random()
+  next()
+})
+
+app.get('/', (request, response) => {
+  response.json({
+    chance: request.chance
+  })
+})
+
+app.listen(3000)
+```
+"This has been upgraded with middlewares"
+- 4. `app.use` is how you define the middlewares, takes a function with three parameters ( the request, the response, the `next` callback).
+- 5. calling `next` signals express can jump to the next middleware or route handler.
+- 6. Error Handling with a special middleware function with four parameters (error, request, response, next)
+```
+const express = require('express')
+const app = express()
+
+app.get('/', (request, response) => {
+  throw new Error('oops')
+})
+
+app.use((err, request, response, next) => {
+  // log the error, for now just console.log
+  console.log(err)
+  response.status(500).send('Something broke!')
+})
+```
+"Ok i'ma keep it real, this last one was for error handling, but did each of these have their own place?"
+
+***Handlebars***
+
+- 7. The `handlebars` package with the `express-handlebars` wrapper is good for looking how to send JSON responses for rendering HTML. Start with a `npm install express-handlebars`.
+
+- 8. You are now going to create the `views` folder in the main directory. There are two methods to remember (this guy is caling them part of an "exported engine factory")
+    - 1. `ExpressHandlebars()` is a "constructor function" "holing the internal implementation of its prototype" producing instance objects that store their configuration, `compiled` and `precompiled` templates, and expose an `engine()` function which can be registered with an Express application". Jesus.
+    - 2. `create()` is a convenience factory function.
+    
+
+
+
+# Regrets of Node.js
+
+Source: [10 Things I Regret About Node.js - Ryan Dahl - JSConf EU 2018](https://www.youtube.com/watch?v=M3BM9TB-8yA)
+- 1. Promises were removed in February 2010, and they are necessary abstractions for async/await. Unified usage of promises would have sped the delivery of the standardization. Node's async APIs are aging badly
+- 2. Security, V8 is a good sandbox, Node should have mhad more guarantees, like your linter should get access to your computer and network.
+- 3. The build system (GYP), build systems are very difficult. GYP is the biggest failure of Node core. The fuck is an FFI?
+- 4. Package.json - it's unfortunate to have a centralized, privaely controlled repository for mudles. 
+- 5. node modules massively complicates module resolution algorithm. "vendored-by-default" is the name of the practice. Environmental variables are different than how browsers work.
+- 6. require a module without the extension ".js", it's needlessly less explicit. The module loader has to query the file system at multiple locations trying to gues what the user intended
+- 7. index.js - nedlessly complicated the module loading system
+- Javascript is the bst dynamic language. Go is the best for fast servers. 
+in the future, look into Deno and Tokio.
+
+
+# Questions
+
+- 1. What's the syntax requirement for the `${answer}`, it's a parameter being console logged
+- 2. When do you use the readline?
+- 3. What's the difference between middleware and route handlers?
+- 4. Learn the role of partials
+- 
+   
